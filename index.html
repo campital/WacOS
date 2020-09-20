@@ -56,7 +56,7 @@
                 <h3 class="window-title">About</h3>
             </div>
         </div>
-        <div class="content">
+        <div class="content" id="about-bio">
             <p>
                 <strong>Welcome!</strong>
                 <br><br>
@@ -126,18 +126,20 @@
                 e = e || window.event;
                 e.preventDefault();
 
-                elem.style.left = Math.min(window.innerWidth - elem.offsetWidth - 5, offX + e.clientX) + 'px';
-                elem.style.top = Math.min(window.innerHeight - elem.offsetHeight - 5, offY + e.clientY) + 'px';
+                elem.style.top = Math.max(0, offY + e.clientY) + 'px';
+                elem.style.left = (offX + e.clientX) + 'px';
             }
 
             function onDragStop() {
+                elem.style.top = Math.max(0, Math.min(window.innerHeight - 20, elem.offsetTop)) + 'px';
+                elem.style.left = Math.max(20 - elem.offsetWidth, Math.min(window.innerWidth - 20, elem.offsetLeft)) + 'px';
                 document.onmousemove = null;
                 document.onmouseup = null;
             }
 
             function windowReset() {
-                elem.style.left = Math.min(window.innerWidth - elem.offsetWidth - 5, elem.offsetLeft) + 'px';
-                elem.style.top = Math.min(window.innerHeight - elem.offsetHeight - 5, elem.offsetTop) + 'px';
+                elem.style.top = Math.max(0, Math.min(window.innerHeight - 20, elem.offsetTop)) + 'px';
+                elem.style.left = Math.max(20 - elem.offsetWidth, Math.min(window.innerWidth - 20, elem.offsetLeft)) + 'px';
             }
         }
 
