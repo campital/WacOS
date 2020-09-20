@@ -17,7 +17,7 @@
     <link rel="apple-touch-icon" href="/favicons/favicon-180.png" sizes="180x180">
     <title>Sakyum</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arimo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -46,7 +46,29 @@
             </div>
         </div>
         <div class="content">
-            
+            <p>Coming soon...</p>
+        </div>
+    </div>
+
+    <div class="container" id="about">
+        <div class="title-wrapper">
+            <div class="title-bar">
+                <h3 class="window-title">About</h3>
+            </div>
+        </div>
+        <div class="content">
+            <p>
+                <strong>Welcome!</strong>
+                <br><br>
+                I am a hobbyist computer programmer with an affinity for making useless programs. 
+                My areas of interest (and experience) mostly include operating systems, C++, Linux, Wii, iOS, reverse engineering, 3D graphics, Minecraft (command blocks and plugins), embedded systems, and hardware.
+                While much of my work has involved lower-level programming, I am currently in the process of learning web development and JavaScript. I must admit that is addictingly conducive to productivity.
+                <br><br>
+                This website is intended to be a sandbox for my JavaScript ideas and web apps. My goal is to have a desktop-like experience where each app can be opened as a separate window with its own
+                style and functionality. This website is under construction, so stay tuned for updates. I am considering putting a blog on here.
+                <br><br>
+                You can find me on <a href="https://github.com/campital">GitHub</a> or contact me at <a href="mailto:sakyum@sakyum.xyz">sakyum@sakyum.xyz</a>.
+            </p>
         </div>
     </div>
 
@@ -174,6 +196,7 @@
 
         makeWindow(document.getElementById('todos'));
         makeWindow(document.getElementById('ball-game'));
+        makeWindow(document.getElementById('about'));
 
         initBgSelect(document.children[0]);
     </script>
