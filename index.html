@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <div id="bg-select"></div>
+
     <div class="container" id="todos">
         <div class="title-wrapper">
             <div class="title-bar">
@@ -117,8 +119,63 @@
             }
         }
 
+        function initBgSelect(elem) {
+            var startX, startY;
+            var selectBox = document.getElementById('bg-select');
+
+            elem.onmousedown = function (e) {
+                e = e || window.event;
+
+                if(e.target === elem) {
+                    e.preventDefault();
+                    startX = e.clientX;
+                    startY = e.clientY;
+
+                    selectBox.style.top = startY + 'px';
+                    selectBox.style.left = startX + 'px';
+                    selectBox.style.width = '0';
+                    selectBox.style.height = '0';
+                    selectBox.style.visibility = 'visible';
+
+                    elem.onmousemove = moveSelect;
+                    elem.onmouseup = stopSelect;
+                }
+            }
+
+            function moveSelect(e) {
+                e = e || window.event;
+                e.preventDefault();
+
+                let tempX = e.clientX - startX;
+                if(tempX < 0) {
+                    selectBox.style.left = (e.clientX) + 'px';
+                    selectBox.style.width = (startX - e.clientX) + 'px';
+                } else {
+                    selectBox.style.left = (startX) + 'px';
+                    selectBox.style.width = (tempX) + 'px';
+                }
+                
+                let tempY = e.clientY - startY;
+                if(tempY < 0) {
+                    selectBox.style.top = (e.clientY) + 'px';
+                    selectBox.style.height = (startY - e.clientY) + 'px';
+                } else {
+                    selectBox.style.top = (startY) + 'px';
+                    selectBox.style.height = (tempY) + 'px';
+                }
+            }
+
+            function stopSelect() {
+                selectBox.style.visibility = 'hidden';
+                elem.onmousemove = null;
+                elem.onmouseup = null;
+            }
+        }
+
         makeWindow(document.getElementById('todos'));
         makeWindow(document.getElementById('ball-game'));
+
+        initBgSelect(document.children[0]);
     </script>
 </body>
 </html>
