@@ -37,6 +37,17 @@
         </div>
     </div>
 
+    <div class="container" id="ball-game">
+        <div class="title-wrapper">
+            <div class="title-bar">
+                <h3 class="window-title">Ball Game</h3>
+            </div>
+        </div>
+        <div class="content">
+            
+        </div>
+    </div>
+
     <script>
         function addItem() {
             let name = document.getElementById("todo-name");
@@ -51,12 +62,30 @@
             items.appendChild(li);
         }
 
-        function makeDraggable(elem) {
+        function makeWindow(elem) {
             var titleBar = elem.children[0];
             titleBar.onmousedown = onDragStart;
             window.onresize = windowReset;
+            elem.onmousedown = onWindowClick;
 
             var offX, offY;
+
+            function onWindowClick() {
+                var zMax = 0;
+                let classNames = document.getElementsByClassName('activeWindow');
+                for (i = 0; i < classNames.length; i++) {
+                    zMax = Math.max(classNames[i].style.zIndex, zMax);
+                    classNames[i].querySelector('.title-bar').style.background = '#f6f6f6';
+                    classNames[i].style.boxShadow = '0px 0px 50px rgba(128, 128, 128, .5)';
+                }
+
+                if(!elem.classList.contains('activeWindow')) {
+                    elem.classList.add('activeWindow');
+                }
+                elem.style.zIndex = zMax + 1;
+                elem.style.boxShadow = '0px 0px 50px rgba(128, 128, 128, 1)';
+                titleBar.children[0].style.background = 'linear-gradient(180deg, rgba(229,228,228,1) 0%, rgba(206,206,206,1) 100%)';
+            }
 
             function onDragStart(e) {
                 e = e || window.event;
@@ -88,7 +117,8 @@
             }
         }
 
-        makeDraggable(document.getElementById('todos'));
+        makeWindow(document.getElementById('todos'));
+        makeWindow(document.getElementById('ball-game'));
     </script>
 </body>
 </html>
