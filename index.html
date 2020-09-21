@@ -93,9 +93,24 @@
 
         function makeWindow(elem) {
             var titleBar = elem.children[0];
-            titleBar.onmousedown = onDragStart;
-            window.onresize = windowReset;
-            elem.onmousedown = onWindowClick;
+            titleBar.addEventListener('mousedown', function(e) {
+                e = e || window.event;
+                e.preventDefault();
+
+                onDragStart(e.clientX, e.clientY);
+            });
+
+            titleBar.addEventListener('touchstart', function(e) {
+                e = e || window.event;
+                e.preventDefault();
+
+                onDragStart(e.touches[0].clientX, e.touches[0].clientY);
+            });
+
+            elem.addEventListener('mousedown', onWindowClick);
+            elem.addEventListener('touchstart', onWindowClick);
+
+            window.addEventListener('resize', windowReset);
 
             var offX, offY;
 
@@ -106,7 +121,7 @@
                     zMax = Math.max(classNames[i].style.zIndex, zMax);
                     classNames[i].querySelector('.title-bar').style.background = '#f6f6f6';
                     classNames[i].querySelector('.window-title').style.color = '#b6b6b6';
-                    classNames[i].style.boxShadow = '0px 0px 50px rgba(128, 128, 128, .5)';
+                    classNames[i].style.boxShadow = '0px 0px 50px rgba(0, 0, 0, .3)';
                     classNames[i].classList.remove('activeWindow');
                 }
 
@@ -114,35 +129,51 @@
                     elem.classList.add('activeWindow');
                 }
                 elem.style.zIndex = zMax + 1;
-                elem.style.boxShadow = '0px 0px 50px rgba(128, 128, 128, 1)';
+                elem.style.boxShadow = '0px 0px 50px rgba(0, 0, 0, .5)';
                 titleBar.querySelector('.window-title').style.color = '#565656';
                 titleBar.children[0].style.background = 'linear-gradient(180deg, rgba(229,228,228,1) 0%, rgba(206,206,206,1) 100%)';
             }
 
-            function onDragStart(e) {
+            function onDragStart(x, y) {
+                offX = elem.offsetLeft - x;
+                offY = elem.offsetTop - y;
+
+                document.addEventListener('mousemove', onDragMouse);
+                document.addEventListener('touchmove', onDragTouch);
+                document.addEventListener('mouseup', onDragStop);
+                document.addEventListener('touchend', onDragStop);
+            }
+
+            function onDragMouse(e) {
                 e = e || window.event;
                 e.preventDefault();
 
-                offX = elem.offsetLeft - e.clientX;
-                offY = elem.offsetTop - e.clientY;
-
-                document.onmousemove = onDrag;
-                document.onmouseup = onDragStop;
+                onDrag(e.clientX, e.clientY);
             }
 
-            function onDrag(e) {
+            function onDragTouch(e) {
                 e = e || window.event;
                 e.preventDefault();
 
-                elem.style.top = Math.max(0, offY + e.clientY) + 'px';
-                elem.style.left = (offX + e.clientX) + 'px';
+                onDrag(e.touches[0].clientX, e.touches[0].clientY);
             }
 
-            function onDragStop() {
+            function onDrag(x, y) {
+                elem.style.top = Math.max(0, offY + y) + 'px';
+                elem.style.left = (offX + x) + 'px';
+            }
+
+            function onDragStop(e) {
+                e = e || window.event;
+                e.preventDefault();
+
                 elem.style.top = Math.max(0, Math.min(window.innerHeight - 20, elem.offsetTop)) + 'px';
                 elem.style.left = Math.max(20 - elem.offsetWidth, Math.min(window.innerWidth - 20, elem.offsetLeft)) + 'px';
-                document.onmousemove = null;
-                document.onmouseup = null;
+                
+                document.removeEventListener('mousemove', onDragMouse);
+                document.removeEventListener('touchmove', onDragTouch);
+                document.removeEventListener('mouseup', onDragStop);
+                document.removeEventListener('touchend', onDragStop);
             }
 
             function windowReset() {
@@ -155,52 +186,79 @@
             var startX, startY;
             var selectBox = document.getElementById('bg-select');
 
-            elem.onmousedown = function (e) {
+            elem.addEventListener('mousedown', function(e) {
                 e = e || window.event;
-
                 if(e.target === elem) {
                     e.preventDefault();
-                    startX = e.clientX;
-                    startY = e.clientY;
-
-                    selectBox.style.top = startY + 'px';
-                    selectBox.style.left = startX + 'px';
-                    selectBox.style.width = '0';
-                    selectBox.style.height = '0';
-                    selectBox.style.visibility = 'visible';
-
-                    elem.onmousemove = moveSelect;
-                    elem.onmouseup = stopSelect;
+                    startSelect(e.clientX, e.clientY);
                 }
+            });
+
+            elem.addEventListener('touchstart', function(e) {
+                e = e || window.event;
+                if(e.target === elem) {
+                    e.preventDefault();
+                    startSelect(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            });
+
+            function startSelect(x, y) {
+                startX = x;
+                startY = y;
+
+                selectBox.style.top = startY + 'px';
+                selectBox.style.left = startX + 'px';
+                selectBox.style.width = '0';
+                selectBox.style.height = '0';
+                selectBox.style.visibility = 'visible';
+
+                elem.addEventListener('mousemove', moveSelectMouse);
+                elem.addEventListener('touchmove', moveSelectTouch);
+                elem.addEventListener('mouseup', stopSelect);
+                elem.addEventListener('touchend', stopSelect);
             }
 
-            function moveSelect(e) {
+            function moveSelectTouch(e) {
                 e = e || window.event;
                 e.preventDefault();
+                moveSelect(e.touches[0].clientX, e.touches[0].clientY);
+            }
 
-                let tempX = e.clientX - startX;
+            function moveSelectMouse(e) {
+                e = e || window.event;
+                e.preventDefault();
+                moveSelect(e.clientX, e.clientY);
+            }
+
+            function moveSelect(x, y) {
+                let tempX = x - startX;
                 if(tempX < 0) {
-                    selectBox.style.left = (e.clientX) + 'px';
-                    selectBox.style.width = (startX - e.clientX) + 'px';
+                    selectBox.style.left = (x) + 'px';
+                    selectBox.style.width = (startX - x) + 'px';
                 } else {
                     selectBox.style.left = (startX) + 'px';
                     selectBox.style.width = (tempX) + 'px';
                 }
                 
-                let tempY = e.clientY - startY;
+                let tempY = y - startY;
                 if(tempY < 0) {
-                    selectBox.style.top = (e.clientY) + 'px';
-                    selectBox.style.height = (startY - e.clientY) + 'px';
+                    selectBox.style.top = (y) + 'px';
+                    selectBox.style.height = (startY - y) + 'px';
                 } else {
                     selectBox.style.top = (startY) + 'px';
                     selectBox.style.height = (tempY) + 'px';
                 }
             }
 
-            function stopSelect() {
+            function stopSelect(e) {
+                e = e || window.event;
+                e.preventDefault();
+
                 selectBox.style.visibility = 'hidden';
-                elem.onmousemove = null;
-                elem.onmouseup = null;
+                elem.removeEventListener('mousemove', moveSelectMouse);
+                elem.removeEventListener('touchmove', moveSelectTouch);
+                elem.removeEventListener('mouseup', stopSelect);
+                elem.removeEventListener('touchend', stopSelect);
             }
         }
 
