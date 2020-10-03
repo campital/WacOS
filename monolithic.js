@@ -74,7 +74,7 @@ function makeWindow(elem) {
             return;
         }
 
-        var zMax = 0;
+        var zMax = 1;
         let classNames = document.getElementsByClassName("activeWindow");
         for (let i = 0; i < classNames.length; i++) {
             zMax = Math.max(classNames[i].style.zIndex, zMax);
@@ -243,7 +243,9 @@ class BallGame {
 
     loop(delta) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        for(let ball of this.balls) {
+        for(let ind = 0; ind < this.balls.length; ind++) {
+            let ball = this.balls[ind];
+            this.calculatePosition(this.balls, , ind);
             this.ctx.beginPath();
             this.ctx.arc(ball.x, ball.y, 100, 0, 2 * Math.PI);
             this.ctx.fill();
@@ -259,6 +261,15 @@ class BallGame {
             color: [0, 0, 0],
             velocity: [0, 0]
         });
+    }
+
+    calculatePosition(balls, bounds, index, delta) {
+        let ball = balls[index];
+        ball.velocity[0] *= Math.pow(.99, delta);
+        ball.velocity[1] -= .00000245 * delta;
+        for(let bound of bounds) {
+            
+        }
     }
 }
 
