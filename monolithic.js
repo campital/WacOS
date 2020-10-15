@@ -245,7 +245,7 @@ class BallGame {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         for(let ind = 0; ind < this.balls.length; ind++) {
             let ball = this.balls[ind];
-            this.calculatePosition(this.balls, , ind);
+            //this.calculatePosition(this.balls, , ind);
             this.ctx.beginPath();
             this.ctx.arc(ball.x, ball.y, 100, 0, 2 * Math.PI);
             this.ctx.fill();
@@ -273,5 +273,5 @@ class BallGame {
     }
 }
 
-let bh = new BallGame(document.querySelector("canvas"));
-bh.addBall(200, 200);
+//let bh = new BallGame(document.querySelector("canvas"));
+//bh.addBall(200, 200);
