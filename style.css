@@ -97,14 +97,15 @@ h2 {
 input[type=text] {
     background-color: white;
     width: 120px;
-    height: 18px;
-    border-radius: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
+    height: 16px;
+    border: solid 1px lightgray;
+    border-radius: 2px;
 }
 
-input[type=text]:focus {
-    border-color: blue;
+button {
+    height: 16px;
+    background-color: white;
+    border: solid 1px lightgray;
 }
 
 #bg-select {

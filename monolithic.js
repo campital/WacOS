@@ -234,6 +234,7 @@ initBgSelect(document.children[0]);
 
 class BallGame {
     balls = new Array();
+    lastTime = 0;
     ctx;
 
     constructor(canvas) {
@@ -241,11 +242,13 @@ class BallGame {
         this.ctx = canvas.getContext("2d");
     }
 
-    loop(delta) {
+    loop(time) {
+        let delta = this.lastTime - time;
+        this.lastTime = time;
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         for(let ind = 0; ind < this.balls.length; ind++) {
             let ball = this.balls[ind];
-            //this.calculatePosition(this.balls, , ind);
+            this.calculateEarliestCollision(this.balls, {}, ind, delta);
             this.ctx.beginPath();
             this.ctx.arc(ball.x, ball.y, 100, 0, 2 * Math.PI);
             this.ctx.fill();
@@ -263,7 +266,7 @@ class BallGame {
         });
     }
 
-    calculatePosition(balls, bounds, index, delta) {
+    calculateEarliestCollision(balls, bounds, index, delta) {
         let ball = balls[index];
         ball.velocity[0] *= Math.pow(.99, delta);
         ball.velocity[1] -= .00000245 * delta;
@@ -273,5 +276,5 @@ class BallGame {
     }
 }
 
-//let bh = new BallGame(document.querySelector("canvas"));
-//bh.addBall(200, 200);
+let bh = new BallGame(document.querySelector("canvas"));
+bh.addBall(200, 200);
