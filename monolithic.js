@@ -276,5 +276,5 @@ class BallGame {
     }
 }
 
-let bh = new BallGame(document.querySelector("canvas"));
-bh.addBall(200, 200);
+//let bh = new BallGame(document.querySelector("canvas"));
+//bh.addBall(200, 200);
