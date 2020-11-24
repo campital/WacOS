@@ -122,10 +122,6 @@ button {
     overflow: scroll;
 }
 
-#about-bio {
-    width: 400px;
-}
-
 #center-logo {
     position: absolute;
     top: 50%;

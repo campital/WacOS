@@ -228,7 +228,6 @@ function initBgSelect(elem) {
 
 makeWindow(document.getElementById("todos"));
 makeWindow(document.getElementById("ball-game"));
-makeWindow(document.getElementById("about"));
 
 initBgSelect(document.children[0]);
 
